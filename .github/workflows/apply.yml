@@ -1,0 +1,29 @@
+name: Script runner
+
+on:
+  workflow_dispatch:
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install Dependencies
+        run: pip install requests
+
+      - name: Run Submission Script
+        env:
+          FULLNAME: ${{ secrets.FULLNAME }}
+          EMAIL: ${{ secrets.EMAIL }}
+          RESUME_LINK: ${{ secrets.RESUME_LINK }}
+          SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
+          REPO_LINK: "https://github.com/${{ github.repository }}"
+          ACTION_RUN_LINK: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        run: python apply.py
